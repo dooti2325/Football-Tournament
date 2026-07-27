@@ -100,6 +100,40 @@ app.post('/register', async (req, res) => {
   }
 });
 
+// API to export all registrations as CSV
+app.get('/export.csv', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('registrations')
+      .select('*')
+      .order('serial', { ascending: true });
+
+    if (error) throw error;
+
+    const headers = "Serial,ID,Name,DOB,Positions,Role,Phone,RegisteredAt\n";
+    const escapeCsv = (str) => {
+      if (str === null || str === undefined) return '""';
+      const s = String(str).replace(/"/g, '""');
+      return `"${s}"`;
+    };
+
+    const rows = data.map(r => {
+      return [
+        r.serial, r.id, r.name, r.dob, r.positions, r.role, r.phone, r.registered_at
+      ].map(escapeCsv).join(',');
+    }).join('\n');
+
+    const csvContent = headers + (rows ? rows + '\n' : '');
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="registrations.csv"');
+    res.status(200).send(csvContent);
+  } catch (err) {
+    console.error('Export error:', err);
+    res.status(500).send('Error generating CSV');
+  }
+});
+
 // Export for Vercel serverless, or listen locally
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
