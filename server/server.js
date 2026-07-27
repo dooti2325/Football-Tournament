@@ -6,9 +6,9 @@ const { createClient } = require('@supabase/supabase-js');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Initialize Supabase
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
+// Initialize Supabase (with fallbacks to prevent Vercel crash if env vars are missing)
+const supabaseUrl = process.env.SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseKey = process.env.SUPABASE_KEY || 'placeholder';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Middleware
