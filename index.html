@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>15 August Football Tournament — Player Registration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+<style>
+  :root{
+    --pitch:#153824;
+    --pitch-light:#1f4d38;
+    --pitch-line: rgba(246,243,234,0.08);
+    --chalk:#F6F3EA;
+    --chalk-dim:#e7e2d2;
+    --ink:#0E1C16;
+    --gold:#D9AE3E;
+    --navy:#1C3A52;
+    --red:#B23A32;
+    --shadow: 0 18px 40px rgba(10,20,15,0.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      repeating-linear-gradient(90deg, var(--pitch) 0px, var(--pitch) 60px, var(--pitch-light) 60px, var(--pitch-light) 120px);
+    min-height:100vh;
+    font-family:'Work Sans', sans-serif;
+    color:var(--ink);
+    padding:32px 16px 64px;
+  }
+  .wrap{
+    max-width:1080px;
+    margin:0 auto;
+  }
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    font-size:12px;
+    color:var(--chalk);
+    opacity:.85;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px;height:1px;background:var(--gold);
+    display:inline-block;
+  }
+  h1.title{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    color:var(--chalk);
+    font-size:clamp(34px, 6vw, 58px);
+    line-height:.95;
+    margin:10px 0 4px;
+    letter-spacing:.01em;
+  }
+  .title .date{ color:var(--gold); }
+  .subtitle{
+    color:var(--chalk-dim);
+    max-width:650px;
+    font-size:15px;
+    line-height:1.5;
+    margin-bottom:32px;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap:28px;
+    align-items:start;
+  }
+  @media(max-width:860px){ .grid{ grid-template-columns:1fr; } }
+
+  .panel{
+    background:var(--chalk);
+    border-radius:6px;
+    box-shadow:var(--shadow);
+    padding:28px 26px 30px;
+    position:relative;
+    overflow:hidden;
+  }
+  .panel::before{
+    content:"";
+    position:absolute; left:0; top:0; bottom:0; width:6px;
+    background:repeating-linear-gradient(180deg, var(--pitch) 0 10px, var(--gold) 10px 12px);
+  }
+  .panel h2{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    font-size:20px;
+    letter-spacing:.03em;
+    margin:0 0 18px;
+    color:var(--ink);
+  }
+  label{
+    display:block;
+    font-size:11px;
+    font-family:'Space Mono', monospace;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    color:#5b6a5f;
+    margin:0 0 6px;
+  }
+  .field{ margin-bottom:16px; }
+  input[type=text], input[type=tel], input[type=date], select{
+    width:100%;
+    padding:11px 12px;
+    border:1.5px solid #d7d2c2;
+    border-radius:3px;
+    font-family:'Work Sans', sans-serif;
+    font-size:14.5px;
+    background:#fff;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s;
+  }
+  input:focus, select:focus{ border-color:var(--pitch-light); }
+  .role-group{ display:flex; gap:8px; }
+  .role-opt{
+    flex:1;
+    text-align:center;
+    padding:10px 6px;
+    border:1.5px solid #d7d2c2;
+    border-radius:3px;
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    letter-spacing:.06em;
+    cursor:pointer;
+    user-select:none;
+    background:#fff;
+    transition: all .15s;
+  }
+  .role-opt.active{
+    border-color:var(--ink);
+    background:var(--ink);
+    color:var(--chalk);
+  }
+  .photo-row{ display:flex; align-items:center; gap:14px; }
+  .photo-pick{
+    width:64px;height:64px;border-radius:50%;
+    background:#e9e5d6;
+    border:1.5px dashed #b9b19a;
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden; flex-shrink:0; cursor:pointer;
+  }
+  .photo-pick img{ width:100%;height:100%;object-fit:cover; }
+  .photo-pick span{ font-size:10px; color:#8a8370; font-family:'Space Mono',monospace; text-align:center; padding:4px;}
+  .file-btn{
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    color:var(--pitch-light);
+    text-decoration:underline;
+    cursor:pointer;
+    background:none;border:none;padding:0;
+  }
+  .submit-btn{
+    width:100%;
+    margin-top:8px;
+    padding:14px;
+    border:none;
+    border-radius:3px;
+    background:var(--pitch);
+    color:var(--chalk);
+    font-family:'Anton', sans-serif;
+    font-size:16px;
+    letter-spacing:.05em;
+    cursor:pointer;
+    transition: background .15s, transform .1s;
+  }
+  .submit-btn:hover{ background:var(--pitch-light); }
+  .submit-btn:active{ transform: scale(.99); }
+  .submit-btn:disabled{ opacity:0.6; cursor:not-allowed; background:#555; }
+  .error{ color:var(--red); font-size:12px; margin-top:6px; font-family:'Space Mono',monospace; display:none; }
+
+  /* card preview */
+  .card-stage{
+    position:sticky; top:24px;
+    display:flex; flex-direction:column; align-items:center; gap:14px;
+  }
+  .card{
+    width:100%;
+    max-width:340px;
+    background:linear-gradient(160deg, var(--pitch) 0%, var(--ink) 100%);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+    color:var(--chalk);
+    font-family:'Work Sans', sans-serif;
+  }
+  .card-top{
+    padding:18px 20px 0;
+    display:flex; justify-content:space-between; align-items:flex-start;
+  }
+  .card-eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:9.5px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    opacity:.75;
+  }
+  .card-date{
+    font-family:'Anton', sans-serif;
+    font-size:22px;
+    color:var(--gold);
+    line-height:1;
+    margin-top:2px;
+  }
+  .role-badge{
+    font-family:'Space Mono', monospace;
+    font-size:10px;
+    letter-spacing:.1em;
+    padding:4px 9px;
+    border-radius:20px;
+    text-transform:uppercase;
+    font-weight:700;
+  }
+  .role-badge.CAPTAIN{ background:var(--gold); color:var(--ink); }
+  .role-badge.OWNER{ background:var(--chalk); color:var(--navy); }
+  .role-badge.PLAYER{ background:rgba(246,243,234,0.14); color:var(--chalk); }
+
+  .card-mid{
+    display:flex; align-items:center; gap:16px;
+    padding:16px 20px 10px;
+  }
+  .card-photo{
+    width:82px;height:82px;border-radius:50%;
+    background:#2a4a37 url('') center/cover;
+    border:3px solid var(--gold);
+    flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+    font-family:'Anton',sans-serif;
+    font-size:28px;
+    color: rgba(246,243,234,0.5);
+  }
+  .card-photo img{ width:100%; height:100%; object-fit:cover; }
+  .card-name{
+    font-family:'Anton', sans-serif;
+    font-size:24px;
+    line-height:1.02;
+    letter-spacing:.01em;
+    word-break:break-word;
+  }
+  .card-position{
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-top:5px;
+  }
+  .card-stats{
+    display:flex;
+    padding:6px 20px 16px;
+    gap:0;
+  }
+  .stat{
+    flex:1;
+    border-top:1px solid rgba(246,243,234,0.12);
+    padding-top:10px;
+  }
+  .stat-label{
+    font-family:'Space Mono', monospace;
+    font-size:9px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    opacity:.6;
+  }
+  .stat-val{
+    font-family:'Anton', sans-serif;
+    font-size:15px;
+    margin-top:2px;
+  }
+  .perforation{
+    position:relative;
+    height:0;
+    border-top:2px dashed rgba(246,243,234,0.28);
+    margin:0 0;
+  }
+  .perforation::before, .perforation::after{
+    content:"";
+    position:absolute; top:-9px;
+    width:18px;height:18px;border-radius:50%;
+    background: var(--pitch);
+    box-shadow: inset 0 0 0 40px rgba(0,0,0,0.001);
+  }
+  .perforation::before{ left:-9px; }
+  .perforation::after{ right:-9px; }
+
+  .card-stub{
+    padding:12px 20px 18px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .stub-id{
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    letter-spacing:.05em;
+    opacity:.8;
+  }
+  .card-hint{
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    color:var(--chalk-dim);
+    text-align:center;
+    max-width:300px;
+  }
+  .actions{ display:flex; gap:10px; width:100%; max-width:340px; }
+  .btn-secondary, .btn-download{
+    flex:1;
+    padding:12px;
+    border-radius:3px;
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    cursor:pointer;
+    border:1.5px solid var(--chalk);
+    background:transparent;
+    color:var(--chalk);
+    transition: all .15s;
+  }
+  .btn-download{ background:var(--gold); border-color:var(--gold); color:var(--ink); font-weight:700; }
+  .btn-secondary:hover{ background:rgba(246,243,234,0.1); }
+  .btn-download:hover{ filter:brightness(1.06); }
+  .btn-secondary:disabled, .btn-download:disabled{ opacity:.4; cursor:not-allowed; }
+  .success-strip{
+    display:none;
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    color: var(--pitch);
+    background: #dcefe1;
+    border:1px solid #b9dcc2;
+    padding:10px 12px;
+    border-radius:3px;
+    margin-bottom:16px;
+  }
+  .input-error {
+    border-color: var(--red) !important;
+    background-color: #fffaf9 !important;
+  }
+  .history-panel {
+    margin-top: 28px;
+    padding-top: 20px;
+  }
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 320px;
+    overflow-y: auto;
+    margin-top: 16px;
+  }
+  .history-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border: 1.5px solid rgba(14, 28, 22, 0.08);
+    border-radius: 4px;
+    background: #fff;
+  }
+  .hist-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: #2a4a37; color: rgba(246,243,234,0.5);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Anton', sans-serif; font-size: 16px; overflow: hidden;
+    flex-shrink: 0;
+  }
+  .hist-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .hist-details { flex: 1; min-width: 0; }
+  .hist-name { 
+    font-family: 'Anton', sans-serif; font-size: 15px; line-height: 1.1; 
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+  }
+  .hist-meta { 
+    font-family: 'Space Mono', monospace; font-size: 9px; color: #5b6a5f; 
+    margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+  }
+  .qr-code-container {
+    background: var(--chalk); padding: 2px; border-radius: 2px;
+    width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+  }
+  .closed-banner {
+    background: var(--red);
+    color: #fff;
+    padding: 16px;
+    text-align: center;
+    border-radius: 4px;
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    margin-bottom: 20px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+    <div>
+      <img src="netaji_logo.png" alt="Netaji Logo" style="height:70px; margin-bottom:12px;">
+      <div class="eyebrow">Grassroots Cup · Registration Desk</div>
+      <h1 class="title">15<sup style="font-size:.4em;">th</sup> AUGUST<br><span class="date">FOOTBALL TOURNAMENT</span></h1>
+    </div>
+    <img src="bose_portrait.png" alt="Subhash Chandra Bose" style="height:120px; border-radius:8px; border:2px solid var(--gold);">
+  </div>
+  <p class="subtitle"><strong>15th August 2026 Football Tournament is organised by Netaji Sports Club, at Netaji Subhash Chandra Bose Stadium, Netaji Bengali Colony, Bhadrawati.</strong><br>Register once, get your matchday card instantly — photo, position, role and a serial ID like the pros carry into the tunnel.</p>
+
+  <div class="grid">
+    <div class="left-col">
+      <div class="closed-banner" id="closedBanner">REGISTRATION HAS CLOSED (PAST AUGUST 5, 2026)</div>
+      
+      <!-- FORM -->
+      <div class="panel" id="formPanel">
+        <h2>Player Registration</h2>
+        <div class="success-strip" id="successStrip">✓ Registered — your matchday card is ready on the right. Serial <span id="successSerial"></span>.</div>
+
+        <div class="field">
+          <label>Full name</label>
+          <input type="text" id="fName" placeholder="e.g. Arjun Mehta" maxlength="40">
+        </div>
+
+        <div class="field photo-row">
+          <div class="photo-pick" id="photoPick">
+            <span>ADD<br>PHOTO</span>
+          </div>
+          <div>
+            <button type="button" class="file-btn" id="photoBtn">Upload photo</button>
+            <input type="file" id="photoInput" accept="image/*" style="display:none">
+            <div style="font-size:11px;color:#8a8370;margin-top:4px;">Square photo looks best</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Date of birth</label>
+          <input type="date" id="fDob">
+        </div>
+
+        <div class="field">
+          <label>Position (Select Multiple)</label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;" id="fPositionGroup">
+            <label style="display:flex; align-items:center; gap:6px; font-size:13px; font-family:'Work Sans'; text-transform:none; color:var(--ink); margin:0;">
+              <input type="checkbox" value="Goalkeeper" class="pos-check"> Goalkeeper
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; font-size:13px; font-family:'Work Sans'; text-transform:none; color:var(--ink); margin:0;">
+              <input type="checkbox" value="Defender" class="pos-check"> Defender
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; font-size:13px; font-family:'Work Sans'; text-transform:none; color:var(--ink); margin:0;">
+              <input type="checkbox" value="Midfielder" class="pos-check"> Midfielder
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; font-size:13px; font-family:'Work Sans'; text-transform:none; color:var(--ink); margin:0;">
+              <input type="checkbox" value="Forward" class="pos-check"> Forward
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Role</label>
+          <div class="role-group" id="roleGroup">
+            <div class="role-opt active" data-role="PLAYER">PLAYER</div>
+            <div class="role-opt" data-role="CAPTAIN">CAPTAIN</div>
+            <div class="role-opt" data-role="OWNER">OWNER</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Contact number</label>
+          <input type="tel" id="fPhone" placeholder="10-digit mobile number" maxlength="15">
+        </div>
+
+        <div class="field" style="background:#e9e5d6; padding:12px; border-radius:4px; margin-top:16px;">
+          <label>Entry Fee &amp; Payment</label>
+          <div style="font-size:13px; margin-bottom:8px;">
+            <strong>Entry Fee: ₹150</strong><br>
+            If anyone wants to contribute voluntarily, it is welcomed!
+          </div>
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div id="paymentQR" style="width:70px; height:70px; background:#fff; padding:4px; border-radius:4px;"></div>
+            <div style="font-size:13px;">
+              Pay on: <strong style="font-size:16px; font-family:'Space Mono';">9923088096</strong><br>
+              <span style="font-size:11px; opacity:0.8;">Or scan the QR code</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="error" id="formError"></div>
+        <button class="submit-btn" id="submitBtn">Register &amp; generate card</button>
+      </div>
+      
+      <!-- HISTORY -->
+      <div class="panel history-panel" id="historyPanel">
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #e7e2d2; padding-bottom:12px; margin-bottom:12px;">
+          <div>
+            <h2>Recent Registrations</h2>
+            <div style="font-family:'Space Mono'; font-size:11px; color:var(--pitch);">TOTAL: <span id="statTotal" style="font-weight:bold; font-size:14px;">0</span> players</div>
+          </div>
+        </div>
+        <div class="history-list" id="historyList"></div>
+      </div>
+    </div>
+
+    <!-- CARD -->
+    <div class="card-stage">
+      <div class="card" id="playerCard">
+        <div class="card-top">
+          <div>
+            <div class="card-eyebrow">Matchday Pass</div>
+            <div class="card-date">15.08</div>
+          </div>
+          <div class="role-badge PLAYER" id="cardRoleBadge">PLAYER</div>
+        </div>
+        <div class="card-mid">
+          <div class="card-photo" id="cardPhoto">?</div>
+          <div>
+            <div class="card-name" id="cardName">Your Name</div>
+            <div class="card-position" id="cardPosition">POSITION</div>
+          </div>
+        </div>
+        <div class="card-stats">
+          <div class="stat">
+            <div class="stat-label">Age</div>
+            <div class="stat-val" id="cardAge">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">D.O.B</div>
+            <div class="stat-val" id="cardDob">—</div>
+          </div>
+        </div>
+        <div class="perforation"></div>
+        <div class="card-stub">
+          <div class="stub-id" id="cardSerial">SERIAL · —</div>
+          <div class="qr-code-container" id="qrcode"></div>
+        </div>
+      </div>
+      <div class="card-hint" id="cardHint">Fill the form — your card updates live as you type.</div>
+      <div class="actions">
+        <button class="btn-secondary" id="resetBtn" disabled>Register another</button>
+        <button class="btn-download" id="downloadBtn" disabled>Download card</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  let photoData = null;
+  let currentRole = 'PLAYER';
+  let registered = false;
+
+  VanillaTilt.init($('playerCard'), { max: 10, speed: 400, glare: true, "max-glare": 0.2 });
+
+  // Generate Payment QR code
+  new QRCode($('paymentQR'), {
+    text: "upi://pay?pa=9923088096@upi&pn=Netaji%20Sports%20Club&cu=INR",
+    width: 62,
+    height: 62,
+    colorDark : "#0E1C16",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.L
+  });
+
+  // Deadline check
+  const checkDeadline = () => {
+    const deadline = new Date("August 6, 2026 00:00:00");
+    if(new Date() >= deadline) {
+      $('formPanel').style.pointerEvents = 'none';
+      $('formPanel').style.opacity = '0.6';
+      $('submitBtn').disabled = true;
+      $('closedBanner').style.display = 'block';
+    }
+  };
+  checkDeadline();
+
+  function calcAge(dobStr){
+    if(!dobStr) return null;
+    const dob = new Date(dobStr);
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    if(m < 0 || (m===0 && today.getDate() < dob.getDate())) age--;
+    return age;
+  }
+  function fmtDob(dobStr){
+    if(!dobStr) return '—';
+    const d = new Date(dobStr);
+    const opts = {day:'2-digit', month:'short', year:'numeric'};
+    return d.toLocaleDateString('en-GB', opts).toUpperCase();
+  }
+
+  function initials(name){
+    if(!name) return '?';
+    return name.trim().split(/\s+/).slice(0,2).map(w=>w[0].toUpperCase()).join('');
+  }
+
+  function getSelectedPositions() {
+    const checks = document.querySelectorAll('.pos-check:checked');
+    return Array.from(checks).map(c => c.value);
+  }
+
+  function updateCardLive(){
+    const name = $('fName').value.trim();
+    const dob = $('fDob').value;
+    const positions = getSelectedPositions();
+    const posStr = positions.length > 0 ? positions.join(', ').toUpperCase() : 'POSITION';
+
+    $('cardName').textContent = name || 'Your Name';
+    $('cardPosition').textContent = posStr;
+    $('cardAge').textContent = dob ? calcAge(dob) : '—';
+    $('cardDob').textContent = fmtDob(dob);
+
+    const photoEl = $('cardPhoto');
+    if(photoData){
+      photoEl.innerHTML = `<img src="${photoData}">`;
+    } else {
+      photoEl.innerHTML = initials(name);
+    }
+
+    $('cardRoleBadge').textContent = currentRole;
+    $('cardRoleBadge').className = 'role-badge ' + currentRole;
+  }
+
+  $('fName').addEventListener('input', (e) => { e.target.classList.remove('input-error'); updateCardLive(); });
+  $('fDob').addEventListener('input', (e) => { e.target.classList.remove('input-error'); updateCardLive(); });
+  document.querySelectorAll('.pos-check').forEach(c => {
+    c.addEventListener('change', () => {
+      document.querySelectorAll('.pos-check').forEach(x => x.parentElement.style.color = 'var(--ink)');
+      updateCardLive();
+    });
+  });
+  $('fPhone').addEventListener('input', (e) => { e.target.classList.remove('input-error'); });
+
+  document.querySelectorAll('.role-opt').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      document.querySelectorAll('.role-opt').forEach(o=>o.classList.remove('active'));
+      el.classList.add('active');
+      currentRole = el.dataset.role;
+      updateCardLive();
+    });
+  });
+
+  $('photoPick').addEventListener('click', ()=> $('photoInput').click());
+  $('photoBtn').addEventListener('click', ()=> $('photoInput').click());
+  $('photoInput').addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      photoData = reader.result;
+      $('photoPick').innerHTML = `<img src="${photoData}">`;
+      updateCardLive();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  async function loadHistory() {
+    try {
+      // Pointing to /api/stats for Vercel compatibility
+      const statsRes = await fetch('/api/stats');
+      if (statsRes.ok) {
+        const stats = await statsRes.json();
+        $('statTotal').textContent = stats.totalRegistrations || 0;
+      }
+    } catch(e) {
+      console.warn('Backend not running?', e);
+    }
+
+    const list = $('historyList');
+    list.innerHTML = '';
+    const records = [];
+    for(let i=0; i<localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if(key.startsWith('reg_')) {
+        try { records.push(JSON.parse(localStorage.getItem(key))); } catch(e){}
+      }
+    }
+    records.sort((a,b) => new Date(b.registeredAt) - new Date(a.registeredAt));
+    
+    records.forEach(r => {
+      const el = document.createElement('div');
+      el.className = 'history-item';
+      let avatar = r.photo ? `<img src="${r.photo}">` : initials(r.name);
+      let posDisp = Array.isArray(r.positions) ? r.positions.join(', ') : (r.position || 'N/A');
+      el.innerHTML = `
+        <div class="hist-avatar">${avatar}</div>
+        <div class="hist-details">
+          <div class="hist-name">${r.name}</div>
+          <div class="hist-meta">${r.serial} · ${posDisp} · ${r.role}</div>
+        </div>
+      `;
+      list.appendChild(el);
+    });
+  }
+  
+  loadHistory();
+
+  $('submitBtn').addEventListener('click', async ()=>{
+    const name = $('fName').value.trim();
+    const dob = $('fDob').value;
+    const positions = getSelectedPositions();
+    const phone = $('fPhone').value.trim();
+    const errEl = $('formError');
+
+    const inputs = [$('fName'), $('fDob'), $('fPhone')];
+    inputs.forEach(i => i.classList.remove('input-error'));
+    
+    let hasError = false;
+    if(!name) { $('fName').classList.add('input-error'); hasError = true; }
+    if(!dob) { $('fDob').classList.add('input-error'); hasError = true; }
+    if(positions.length === 0) { 
+      document.querySelectorAll('.pos-check').forEach(x => x.parentElement.style.color = 'var(--red)');
+      hasError = true; 
+    }
+    if(!phone) { $('fPhone').classList.add('input-error'); hasError = true; }
+
+    if(hasError){
+      errEl.textContent = 'Please fill all required fields highlighted in red.';
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+
+    $('submitBtn').disabled = true;
+    $('submitBtn').textContent = 'Registering with server…';
+
+    const id = 'reg_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+    const registeredAt = new Date().toISOString();
+
+    const record = {
+      id, name, dob, positions, role: currentRole, phone,
+      photo: photoData, registeredAt
+    };
+
+    let serial = 'AC-XXXX';
+    try {
+      // Pointing to /api/register for Vercel compatibility
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(record)
+      });
+      if(!res.ok) throw new Error('Backend failed');
+      const data = await res.json();
+      serial = data.serial;
+    } catch(err) {
+      console.error(err);
+      alert('Could not connect to live database. Make sure the local server is running (npm start). Saving locally anyway.');
+      serial = 'AC-' + String(Math.floor(Math.random()*9999)).padStart(4,'0');
+    }
+
+    record.serial = serial;
+    localStorage.setItem(id, JSON.stringify(record));
+    await loadHistory();
+
+    $('cardSerial').textContent = 'SERIAL · ' + serial;
+    $('successSerial').textContent = serial;
+    $('successStrip').style.display = 'block';
+    $('cardHint').textContent = 'Registered! Tap "Download card" to save your matchday pass.';
+    $('downloadBtn').disabled = false;
+    $('resetBtn').disabled = false;
+    $('submitBtn').textContent = 'Registered ✓';
+    registered = true;
+
+    $('qrcode').innerHTML = '';
+    new QRCode($('qrcode'), {
+      text: "ID: " + serial + "\\nName: " + name + "\\nPos: " + positions.join(','),
+      width: 36,
+      height: 36,
+      colorDark : "#0E1C16",
+      colorLight : "#F6F3EA",
+      correctLevel : QRCode.CorrectLevel.L
+    });
+
+    document.querySelectorAll('#fName,#fDob,#fPhone,#photoPick,#photoBtn,.role-opt,.pos-check').forEach(el=>{
+      el.style.pointerEvents = 'none';
+      el.style.opacity = '0.7';
+    });
+  });
+
+  $('resetBtn').addEventListener('click', ()=>{
+    $('fName').value=''; $('fDob').value=''; $('fPhone').value='';
+    document.querySelectorAll('.pos-check').forEach(c => c.checked = false);
+    photoData = null;
+    $('photoPick').innerHTML = '<span>ADD<br>PHOTO</span>';
+    currentRole = 'PLAYER';
+    document.querySelectorAll('.role-opt').forEach(o=>o.classList.remove('active'));
+    document.querySelector('.role-opt[data-role="PLAYER"]').classList.add('active');
+    $('successStrip').style.display = 'none';
+    $('cardHint').textContent = 'Fill the form — your card updates live as you type.';
+    $('downloadBtn').disabled = true;
+    $('resetBtn').disabled = true;
+    $('submitBtn').disabled = false;
+    $('submitBtn').textContent = 'Register & generate card';
+    registered = false;
+    $('qrcode').innerHTML = '';
+    
+    document.querySelectorAll('#fName,#fDob,#fPhone,#photoPick,#photoBtn,.role-opt,.pos-check').forEach(el=>{
+      el.style.pointerEvents = 'auto';
+      el.style.opacity = '1';
+    });
+    updateCardLive();
+  });
+
+  $('downloadBtn').addEventListener('click', ()=>{
+    if(!registered) return;
+    if($('playerCard').vanillaTilt) $('playerCard').vanillaTilt.destroy();
+    $('playerCard').style.transform = 'none';
+    
+    setTimeout(() => {
+      html2canvas($('playerCard'), {backgroundColor:null, scale:3}).then(canvas=>{
+        const link = document.createElement('a');
+        link.download = ($('cardName').textContent.replace(/\\s+/g,'_') || 'player') + '_matchday_card.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        VanillaTilt.init($('playerCard'), { max: 10, speed: 400, glare: true, "max-glare": 0.2 });
+      });
+    }, 50);
+  });
+
+  updateCardLive();
+</script>
+</body>
+</html>

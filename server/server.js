@@ -46,7 +46,7 @@ async function getNextSerial() {
 }
 
 // API to get stats
-app.get('/stats', async (req, res) => {
+app.get(['/stats', '/api/stats'], async (req, res) => {
   try {
     const { count, error } = await supabase
       .from('registrations')
@@ -62,7 +62,7 @@ app.get('/stats', async (req, res) => {
 });
 
 // API to register
-app.post('/register', async (req, res) => {
+app.post(['/register', '/api/register'], async (req, res) => {
   const { id, name, dob, positions, role, phone, registeredAt } = req.body;
   
   if (!name || !dob || !positions || !phone) {
