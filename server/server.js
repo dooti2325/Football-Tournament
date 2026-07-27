@@ -18,7 +18,11 @@ const supabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', 
 app.use(cors());
 app.use(express.json({ limit: '10mb' })); // allow photo uploads
 
-app.get('/', (req, res) => {
+// Serve the frontend statically for local development
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../client')));
+
+app.get('/api', (req, res) => {
   res.send('Netaji Sports Club Backend API is running.');
 });
 
