@@ -100,8 +100,13 @@ app.post('/register', async (req, res) => {
   }
 });
 
+// Root route for testing Vercel deployment
+app.get('/', (req, res) => {
+  res.send('Backend Server is running on Vercel!');
+});
+
 // API to export all registrations as CSV
-app.get('/export.csv', async (req, res) => {
+app.get(['/export.csv', '/api/export-csv'], async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('registrations')
