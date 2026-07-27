@@ -746,12 +746,15 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(record)
       });
-      if(!res.ok) throw new Error('Backend failed');
+      if(!res.ok) {
+        const errData = await res.json().catch(()=>({}));
+        throw new Error(errData.details || errData.error || `Backend failed with status ${res.status}`);
+      }
       const data = await res.json();
       serial = data.serial;
     } catch(err) {
       console.error(err);
-      alert('Could not connect to live database. Make sure the local server is running (npm start). Saving locally anyway.');
+      alert('Registration failed: ' + err.message + '\n\nIf you are on Render, make sure SUPABASE_URL and SUPABASE_KEY are added to your Environment Variables! Saving locally anyway.');
       serial = 'AC-' + String(Math.floor(Math.random()*9999)).padStart(4,'0');
     }
 
