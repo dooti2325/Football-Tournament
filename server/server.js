@@ -15,6 +15,10 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 app.use(cors());
 app.use(express.json({ limit: '10mb' })); // allow larger payload if needed
 
+// Serve the frontend static files from the parent directory
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../')));
+
 // Helper to generate the next Serial ID
 async function getNextSerial() {
   try {
@@ -100,11 +104,6 @@ app.post(['/register', '/api/register'], async (req, res) => {
   }
 });
 
-// Root route for testing Vercel deployment
-app.get('/', (req, res) => {
-  res.send('Backend Server is running on Vercel!');
-});
-
 // API to export all registrations as CSV
 app.get(['/export.csv', '/api/export-csv'], async (req, res) => {
   try {
@@ -139,12 +138,8 @@ app.get(['/export.csv', '/api/export-csv'], async (req, res) => {
   }
 });
 
-// Export for Vercel serverless, or listen locally
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`Backend server running at http://localhost:${PORT}`);
-    console.log(`Connected to Supabase: ${supabaseUrl}`);
-  });
-}
-
-module.exports = app;
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Backend server running on port ${PORT}`);
+  console.log(`Connected to Supabase: ${supabaseUrl}`);
+});
