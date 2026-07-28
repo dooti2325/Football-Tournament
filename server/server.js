@@ -65,6 +65,24 @@ app.get(['/stats', '/api/stats'], async (req, res) => {
   }
 });
 
+// API to get recent registrations list
+app.get(['/registrations', '/api/registrations'], async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('registrations')
+      .select('name, serial, positions, role, registered_at, photo')
+      .order('registered_at', { ascending: false })
+      .limit(100); // Fetch up to 100 recent players to display
+      
+    if (error) throw error;
+
+    res.json(data);
+  } catch (err) {
+    console.error('List error:', err);
+    res.status(500).json({ error: 'Failed to fetch registration list' });
+  }
+});
+
 // API to register
 app.post(['/register', '/api/register'], async (req, res) => {
   const { id, name, dob, positions, role, phone, registeredAt } = req.body;

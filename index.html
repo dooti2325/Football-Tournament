@@ -694,6 +694,35 @@
         const stats = await statsRes.json();
         $('statTotal').textContent = stats.totalRegistrations || 0;
       }
+
+      const regRes = await fetch(`${apiBase}/registrations`);
+      if (regRes.ok) {
+        const records = await regRes.json();
+        const list = $('historyList');
+        list.innerHTML = '';
+        records.forEach(r => {
+          const el = document.createElement('div');
+          el.className = 'history-item';
+          let avatar = r.photo ? `<img src="${r.photo}">` : initials(r.name);
+          
+          let posStr = '';
+          if (Array.isArray(r.positions)) posStr = r.positions.join(', ');
+          else if (typeof r.positions === 'string') {
+             try { posStr = JSON.parse(r.positions).join(', '); } catch(e) { posStr = r.positions; }
+          }
+          else if (r.position) posStr = r.position;
+          
+          el.innerHTML = `
+            <div class="hist-avatar">${avatar}</div>
+            <div class="hist-details">
+              <div class="hist-name">${r.name}</div>
+              <div class="hist-meta">${r.serial} · ${posStr || 'N/A'} · ${r.role}</div>
+            </div>
+          `;
+          list.appendChild(el);
+        });
+        return; // Success, skip localStorage fallback
+      }
     } catch(e) {
       console.warn('Backend not running?', e);
     }
@@ -736,6 +765,7 @@
 
     const inputs = [$('fName'), $('fDob'), $('fPhone')];
     inputs.forEach(i => i.classList.remove('input-error'));
+    $('photoPick').style.borderColor = '#b9b19a';
     
     let hasError = false;
     if(!name) { $('fName').classList.add('input-error'); hasError = true; }
@@ -745,6 +775,7 @@
       hasError = true; 
     }
     if(!phone) { $('fPhone').classList.add('input-error'); hasError = true; }
+    if(!photoData) { $('photoPick').style.borderColor = 'var(--red)'; hasError = true; }
 
     if(hasError){
       errEl.textContent = 'Please fill all required fields highlighted in red.';
