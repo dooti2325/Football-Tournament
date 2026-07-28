@@ -4,89 +4,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>15 August Football Tournament — Player Registration</title>
+  <title>15 August Football Tournament 2026 — Player Registration | Netaji Sports Club</title>
+  <meta name="description" content="Register for the 15th August 2026 Football Tournament organised by Netaji Sports Club at Netaji Subhash Chandra Bose Stadium, Bhadrawati. Entry fee ₹150. Last date: August 5, 2026.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
-  <link rel='stylesheet' href='style.css'>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <div class="wrap">
-    <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-      <div>
-        <img src="client/images/netaji_logo.png" alt="Netaji Logo" style="height:70px; margin-bottom:12px;">
-        <div class="eyebrow">Grassroots Cup · Registration Desk</div>
-        <h1 class="title">15<sup style="font-size:.4em;">th</sup> AUGUST<br><span class="date">FOOTBALL
-            TOURNAMENT</span></h1>
+
+    <!-- HEADER -->
+    <header class="site-header">
+      <div class="header-left">
+        <img src="client/images/netaji_logo.png" alt="Netaji Sports Club Logo" class="club-logo">
+        <div>
+          <div class="eyebrow">Grassroots Cup · Registration Desk</div>
+          <h1 class="title">15<sup>th</sup> AUGUST<br><span class="date">FOOTBALL TOURNAMENT</span></h1>
+        </div>
       </div>
-      <img src="client/images/bose_portrait.png" alt="Subhash Chandra Bose"
-        style="height:120px; border-radius:8px; border:2px solid var(--gold);">
-    </div>
-    <p class="subtitle"><strong>15th August 2026 Football Tournament is organised by Netaji Sports Club, at Netaji
-        Subhash Chandra Bose Stadium, Netaji Bengali Colony, Bhadrawati.</strong><br>Register once, get your matchday
-      card instantly — photo, position, role and a serial ID like the pros carry into the tunnel.</p>
+      <img src="client/images/bose_portrait.png" alt="Netaji Subhash Chandra Bose" class="bose-img">
+    </header>
 
+    <p class="subtitle">
+      <strong>Organised by Netaji Sports Club · Netaji Subhash Chandra Bose Stadium, Netaji Bengali Colony, Bhadrawati</strong><br>
+      Register below and get your official matchday pass instantly — complete with your photo, position, serial ID and scannable QR code.
+      <span class="deadline-notice">⚠ Last date to register: <strong>5th August 2026</strong></span>
+    </p>
+
+    <!-- CLOSED BANNER -->
+    <div class="closed-banner" id="closedBanner">REGISTRATION CLOSED — PAST 5TH AUGUST 2026</div>
+
+    <!-- MAIN GRID: Form (left) | Card Preview (right) -->
     <div class="grid">
-      <div class="left-col">
-        <div class="closed-banner" id="closedBanner">REGISTRATION HAS CLOSED (PAST AUGUST 5, 2026)</div>
 
-        <!-- FORM -->
+      <!-- LEFT: FORM -->
+      <div class="left-col">
         <div class="panel" id="formPanel">
           <h2>Player Registration</h2>
-          <div class="success-strip" id="successStrip">✓ Registered — your matchday card is ready on the right. Serial
-            <span id="successSerial"></span>.
+
+          <div class="success-strip" id="successStrip">
+            ✓ Registered! Your matchday card is ready. Serial: <strong id="successSerial"></strong>
           </div>
 
+          <!-- NAME -->
           <div class="field">
-            <label>Full name</label>
-            <input type="text" id="fName" placeholder="e.g. Arjun Mehta" maxlength="40">
+            <label for="fName">Full Name *</label>
+            <input type="text" id="fName" placeholder="e.g. Arjun Mehta" maxlength="40" autocomplete="name">
           </div>
 
+          <!-- PHOTO -->
           <div class="field photo-row">
-            <div class="photo-pick" id="photoPick">
+            <div class="photo-pick" id="photoPick" title="Click to upload photo">
               <span>ADD<br>PHOTO</span>
             </div>
             <div>
-              <button type="button" class="file-btn" id="photoBtn">Upload photo</button>
+              <button type="button" class="file-btn" id="photoBtn">Upload photo *</button>
               <input type="file" id="photoInput" accept="image/*" style="display:none">
-              <div style="font-size:11px;color:#8a8370;margin-top:4px;">Square photo looks best</div>
+              <div class="photo-hint">Square photo looks best. Photo is required.</div>
             </div>
           </div>
 
+          <!-- DOB -->
           <div class="field">
-            <label>Date of birth</label>
+            <label for="fDob">Date of Birth *</label>
             <input type="date" id="fDob">
           </div>
 
+          <!-- POSITION -->
           <div class="field">
-            <label>Position (Select Multiple)</label>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;" id="fPositionGroup">
-              <label
-                style="display:flex; align-items:center; gap:6px; font-size:13px; font-family:'Work Sans'; text-transform:none; color:var(--ink); margin:0;">
-                <input type="checkbox" value="Goalkeeper" class="pos-check"> Goalkeeper
-              </label>
-              <label
-                style="display:flex; align-items:center; gap:6px; font-size:13px; font-family:'Work Sans'; text-transform:none; color:var(--ink); margin:0;">
-                <input type="checkbox" value="Defender" class="pos-check"> Defender
-              </label>
-              <label
-                style="display:flex; align-items:center; gap:6px; font-size:13px; font-family:'Work Sans'; text-transform:none; color:var(--ink); margin:0;">
-                <input type="checkbox" value="Midfielder" class="pos-check"> Midfielder
-              </label>
-              <label
-                style="display:flex; align-items:center; gap:6px; font-size:13px; font-family:'Work Sans'; text-transform:none; color:var(--ink); margin:0;">
-                <input type="checkbox" value="Forward" class="pos-check"> Forward
-              </label>
+            <label>Position (select one or more) *</label>
+            <div class="pos-group" id="fPositionGroup">
+              <label class="pos-label"><input type="checkbox" value="Goalkeeper" class="pos-check"> Goalkeeper</label>
+              <label class="pos-label"><input type="checkbox" value="Defender" class="pos-check"> Defender</label>
+              <label class="pos-label"><input type="checkbox" value="Midfielder" class="pos-check"> Midfielder</label>
+              <label class="pos-label"><input type="checkbox" value="Forward" class="pos-check"> Forward</label>
             </div>
           </div>
 
+          <!-- ROLE -->
           <div class="field">
-            <label>Role</label>
+            <label>Role *</label>
             <div class="role-group" id="roleGroup">
               <div class="role-opt active" data-role="PLAYER">PLAYER</div>
               <div class="role-opt" data-role="CAPTAIN">CAPTAIN</div>
@@ -94,45 +95,47 @@
             </div>
           </div>
 
+          <!-- PHONE -->
           <div class="field">
-            <label>Contact number</label>
-            <input type="tel" id="fPhone" placeholder="10-digit mobile number" maxlength="15">
+            <label for="fPhone">Contact Number *</label>
+            <input type="tel" id="fPhone" placeholder="10-digit mobile number" maxlength="15" autocomplete="tel">
           </div>
 
-          <div class="field" style="background:#e9e5d6; padding:12px; border-radius:4px; margin-top:16px;">
+          <!-- PAYMENT -->
+          <div class="payment-box">
             <label>Entry Fee &amp; Payment</label>
-            <div style="font-size:13px; margin-bottom:8px;">
+            <div class="payment-details">
               <strong>Entry Fee: ₹150</strong><br>
-              If anyone wants to contribute voluntarily, it is welcomed!
+              Voluntary contributions are also welcomed!
             </div>
-            <div style="display:flex; align-items:center; gap:16px;">
-              <div id="paymentQR" style="width:70px; height:70px; background:#fff; padding:4px; border-radius:4px;">
-              </div>
-              <div style="font-size:13px;">
-                Pay on: <strong style="font-size:16px; font-family:'Space Mono';">9923088096</strong><br>
-                <span style="font-size:11px; opacity:0.8;">Or scan the QR code</span>
+            <div class="payment-row">
+              <div id="paymentQR" class="payment-qr"></div>
+              <div class="payment-text">
+                Pay on: <strong class="phone-number">9923088096</strong><br>
+                <span class="pay-sub">Or scan the QR code</span>
               </div>
             </div>
           </div>
 
           <div class="error" id="formError"></div>
-          <button class="submit-btn" id="submitBtn">Register &amp; generate card</button>
+          <button class="submit-btn" id="submitBtn">Register &amp; Generate Card</button>
         </div>
+      </div>
 
-
-        <!-- CARD -->
+      <!-- RIGHT: CARD PREVIEW -->
+      <div class="right-col">
         <div class="card-stage">
           <div class="card" id="playerCard">
             <div class="card-top">
               <div>
-                <div class="card-eyebrow">Matchday Pass</div>
-                <div class="card-date">15.08.26</div>
+                <div class="card-eyebrow">Matchday Pass · Netaji Sports Club</div>
+                <div class="card-date">15 · AUG · 2026</div>
               </div>
               <div class="role-badge PLAYER" id="cardRoleBadge">PLAYER</div>
             </div>
             <div class="card-mid">
               <div class="card-photo" id="cardPhoto">?</div>
-              <div>
+              <div class="card-info">
                 <div class="card-name" id="cardName">Your Name</div>
                 <div class="card-position" id="cardPosition">POSITION</div>
               </div>
@@ -149,34 +152,37 @@
             </div>
             <div class="perforation"></div>
             <div class="card-stub">
-              <div class="stub-id" id="cardSerial">SERIAL —</div>
+              <div class="stub-id" id="cardSerial">SERIAL · AC-XXXX</div>
+              <div class="qr-code-container" id="qrcode"></div>
             </div>
           </div>
+
           <div class="card-hint" id="cardHint">Fill the form — your card updates live as you type.</div>
+
           <div class="actions">
-            <button class="btn-secondary" id="resetBtn" disabled>Register another</button>
-            <button class="btn-download" id="downloadBtn" disabled>Download card</button>
+            <button class="btn-secondary" id="resetBtn" disabled>Register Another</button>
+            <button class="btn-download" id="downloadBtn" disabled>Download Card</button>
           </div>
         </div>
       </div>
-    </div>
 
+    </div><!-- end .grid -->
 
-    <!-- HISTORY -->
-    <div class="panel history-panel" id="historyPanel">
-      <div
-        style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #e7e2d2; padding-bottom:12px; margin-bottom:12px;">
+    <!-- REGISTRATIONS HISTORY -->
+    <section class="panel history-panel" id="historyPanel" aria-label="Recent Registrations">
+      <div class="history-header">
         <div>
           <h2>Recent Registrations</h2>
-          <div style="font-family:'Space Mono'; font-size:11px; color:var(--pitch);">TOTAL: <span id="statTotal"
-              style="font-weight:bold; font-size:14px;">0</span> players</div>
+          <div class="stat-total">TOTAL: <span id="statTotal" class="stat-total-num">0</span> players</div>
         </div>
+        <a href="/api/export-csv" class="btn-export" download>⬇ Download CSV</a>
       </div>
       <div class="history-list" id="historyList"></div>
-    </div>
-  </div>
+    </section>
 
-  <script src='script.js'></script>
+  </div><!-- end .wrap -->
+
+  <script src="script.js"></script>
 </body>
 
 </html>
