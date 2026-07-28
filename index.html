@@ -726,58 +726,58 @@
           <button class="submit-btn" id="submitBtn">Register &amp; generate card</button>
         </div>
 
-        <!-- HISTORY -->
-        <div class="panel history-panel" id="historyPanel">
-          <div
-            style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #e7e2d2; padding-bottom:12px; margin-bottom:12px;">
-            <div>
-              <h2>Recent Registrations</h2>
-              <div style="font-family:'Space Mono'; font-size:11px; color:var(--pitch);">TOTAL: <span id="statTotal"
-                  style="font-weight:bold; font-size:14px;">0</span> players</div>
+        <!-- CARD -->
+        <div class="card-stage">
+          <div class="card" id="playerCard">
+            <div class="card-top">
+              <div>
+                <div class="card-eyebrow">Matchday Pass</div>
+                <div class="card-date">15.08.26</div>
+              </div>
+              <div class="role-badge PLAYER" id="cardRoleBadge">PLAYER</div>
+            </div>
+            <div class="card-mid">
+              <div class="card-photo" id="cardPhoto">?</div>
+              <div>
+                <div class="card-name" id="cardName">Your Name</div>
+                <div class="card-position" id="cardPosition">POSITION</div>
+              </div>
+            </div>
+            <div class="card-stats">
+              <div class="stat">
+                <div class="stat-label">Age</div>
+                <div class="stat-val" id="cardAge">—</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">D.O.B</div>
+                <div class="stat-val" id="cardDob">—</div>
+              </div>
+            </div>
+            <div class="perforation"></div>
+            <div class="card-stub">
+              <div class="stub-id" id="cardSerial">SERIAL —</div>
             </div>
           </div>
-          <div class="history-list" id="historyList"></div>
+          <div class="card-hint" id="cardHint">Fill the form — your card updates live as you type.</div>
+          <div class="actions">
+            <button class="btn-secondary" id="resetBtn" disabled>Register another</button>
+            <button class="btn-download" id="downloadBtn" disabled>Download card</button>
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- CARD -->
-      <div class="card-stage">
-        <div class="card" id="playerCard">
-          <div class="card-top">
-            <div>
-              <div class="card-eyebrow">Matchday Pass</div>
-              <div class="card-date">15.08.26</div>
-            </div>
-            <div class="role-badge PLAYER" id="cardRoleBadge">PLAYER</div>
-          </div>
-          <div class="card-mid">
-            <div class="card-photo" id="cardPhoto">?</div>
-            <div>
-              <div class="card-name" id="cardName">Your Name</div>
-              <div class="card-position" id="cardPosition">POSITION</div>
-            </div>
-          </div>
-          <div class="card-stats">
-            <div class="stat">
-              <div class="stat-label">Age</div>
-              <div class="stat-val" id="cardAge">—</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">D.O.B</div>
-              <div class="stat-val" id="cardDob">—</div>
-            </div>
-          </div>
-          <div class="perforation"></div>
-          <div class="card-stub">
-            <div class="stub-id" id="cardSerial">SERIAL —</div>
-          </div>
-        </div>
-        <div class="card-hint" id="cardHint">Fill the form — your card updates live as you type.</div>
-        <div class="actions">
-          <button class="btn-secondary" id="resetBtn" disabled>Register another</button>
-          <button class="btn-download" id="downloadBtn" disabled>Download card</button>
+    <!-- HISTORY -->
+    <div class="panel history-panel" id="historyPanel">
+      <div
+        style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #e7e2d2; padding-bottom:12px; margin-bottom:12px;">
+        <div>
+          <h2>Recent Registrations</h2>
+          <div style="font-family:'Space Mono'; font-size:11px; color:var(--pitch);">TOTAL: <span id="statTotal"
+              style="font-weight:bold; font-size:14px;">0</span> players</div>
         </div>
       </div>
+      <div class="history-list" id="historyList"></div>
     </div>
   </div>
 
