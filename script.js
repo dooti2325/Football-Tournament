@@ -293,17 +293,6 @@ $('submitBtn').addEventListener('click', async () => {
   $('submitBtn').textContent = 'Registered ✓';
   registered = true;
 
-  // Generate player QR
-  $('qrcode').innerHTML = '';
-  new QRCode($('qrcode'), {
-    text: `ID: ${serial}\nName: ${name}\nPos: ${positions.join(',')}`,
-    width: 36,
-    height: 36,
-    colorDark: '#0E1C16',
-    colorLight: '#F6F3EA',
-    correctLevel: QRCode.CorrectLevel.L
-  });
-
   // Lock form inputs
   document.querySelectorAll('#fName,#fDob,#fPhone,#photoPick,#photoBtn,.role-opt,.pos-check,.pos-label').forEach(el => {
     el.style.pointerEvents = 'none';
@@ -364,24 +353,10 @@ function downloadAdminCard(r) {
   $('cardPhoto').style.backgroundImage = 'none';
   $('cardPhoto').textContent = initials(r.name);
 
-  $('qrcode').innerHTML = '';
-  new QRCode($('qrcode'), {
-    text: `ID: ${r.serial}\nName: ${r.name}\nPos: ${pos}`,
-    width: 36,
-    height: 36,
-    colorDark: '#0E1C16',
-    colorLight: '#F6F3EA',
-    correctLevel: QRCode.CorrectLevel.L
-  });
-
   captureAndDownload(r.name, () => {
     // After download, restore the original state
-    if (prevRegistered) {
-      // Restore to whatever was registered (no-op — user can see their own card)
-    } else {
-      // Restore empty state
+    if (!prevRegistered) {
       updateCardLive();
-      $('qrcode').innerHTML = '';
       $('cardSerial').textContent = 'SERIAL · AC-XXXX';
     }
   });

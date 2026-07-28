@@ -690,17 +690,6 @@ input[type=date]:focus {
   opacity: 0.75;
 }
 
-.qr-code-container {
-  background: var(--chalk);
-  padding: 3px;
-  border-radius: 3px;
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
 
 /* =============================================
    CARD ACTIONS
