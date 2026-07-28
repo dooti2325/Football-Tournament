@@ -270,6 +270,14 @@ $('submitBtn').addEventListener('click', async () => {
     });
     if (!res.ok) {
       const errData = await res.json().catch(() => ({}));
+      if (res.status === 409) {
+        // Duplicate registration — show inline error, stop process
+        errEl.textContent = '⚠ ' + (errData.message || 'This phone number is already registered.');
+        errEl.style.display = 'block';
+        $('submitBtn').disabled = false;
+        $('submitBtn').textContent = 'Register & Generate Card';
+        return;
+      }
       throw new Error(errData.details || errData.error || `Server error ${res.status}`);
     }
     const data = await res.json();

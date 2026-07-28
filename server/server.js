@@ -86,33 +86,53 @@ app.get(['/registrations', '/api/registrations'], async (req, res) => {
 // API to register
 app.post(['/register', '/api/register'], async (req, res) => {
   const { id, name, dob, positions, role, phone, registeredAt } = req.body;
-  
+
   if (!name || !dob || !positions || !phone) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  const serial = await getNextSerial();
-  const posString = Array.isArray(positions) ? positions.join(', ') : positions;
-
-  const row = {
-    id: id || `reg_${Date.now()}`,
-    serial: serial,
-    name: name,
-    dob: dob,
-    positions: posString,
-    role: role || 'PLAYER',
-    phone: phone,
-    registered_at: registeredAt || new Date().toISOString()
-  };
-
   try {
-    const { data, error } = await supabase
+    // ── Duplicate check: block same phone number from registering twice ──
+    const { data: existing, error: checkError } = await supabase
+      .from('registrations')
+      .select('serial, name')
+      .eq('phone', phone)
+      .limit(1);
+
+    if (checkError) {
+      console.error('Duplicate check error:', checkError);
+      return res.status(500).json({ error: 'Database error during duplicate check' });
+    }
+
+    if (existing && existing.length > 0) {
+      return res.status(409).json({
+        error: 'duplicate',
+        message: `This phone number is already registered. Serial ID: ${existing[0].serial} (${existing[0].name})`
+      });
+    }
+
+    // ── No duplicate found — proceed with registration ──
+    const serial = await getNextSerial();
+    const posString = Array.isArray(positions) ? positions.join(', ') : positions;
+
+    const row = {
+      id: id || `reg_${Date.now()}`,
+      serial,
+      name,
+      dob,
+      positions: posString,
+      role: role || 'PLAYER',
+      phone,
+      registered_at: registeredAt || new Date().toISOString()
+    };
+
+    const { error: insertError } = await supabase
       .from('registrations')
       .insert([row]);
 
-    if (error) {
-      console.error('Supabase insert error:', error);
-      return res.status(500).json({ error: 'Database write error', details: error.message });
+    if (insertError) {
+      console.error('Supabase insert error:', insertError);
+      return res.status(500).json({ error: 'Database write error', details: insertError.message });
     }
 
     res.json({ success: true, serial });
