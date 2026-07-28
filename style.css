@@ -20,21 +20,22 @@
 /* =============================================
    RESET & BASE
    ============================================= */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
 }
 
 body {
-  background: repeating-linear-gradient(
-    90deg,
-    var(--pitch) 0px, var(--pitch) 60px,
-    var(--pitch-light) 60px, var(--pitch-light) 120px
-  );
+  background: repeating-linear-gradient(90deg,
+      var(--pitch) 0px, var(--pitch) 60px,
+      var(--pitch-light) 60px, var(--pitch-light) 120px);
   min-height: 100vh;
   font-family: 'Work Sans', sans-serif;
   color: var(--ink);
@@ -68,6 +69,7 @@ body {
   .grid {
     grid-template-columns: 1fr;
   }
+
   .right-col {
     position: static;
     /* Show card above form on mobile */
@@ -109,8 +111,13 @@ body {
 }
 
 @media (max-width: 600px) {
-  .bose-img { height: 80px; }
-  .club-logo { height: 52px; }
+  .bose-img {
+    height: 80px;
+  }
+
+  .club-logo {
+    height: 52px;
+  }
 }
 
 /* =============================================
@@ -206,11 +213,9 @@ h1.title sup {
   top: 0;
   bottom: 0;
   width: 6px;
-  background: repeating-linear-gradient(
-    180deg,
-    var(--pitch) 0 10px,
-    var(--gold) 10px 12px
-  );
+  background: repeating-linear-gradient(180deg,
+      var(--pitch) 0 10px,
+      var(--gold) 10px 12px);
 }
 
 .panel h2 {
@@ -393,7 +398,7 @@ input[type=date]:focus {
   border: 1px solid #d7d2c2;
 }
 
-.payment-box > label {
+.payment-box>label {
   margin-bottom: 8px;
 }
 
@@ -520,18 +525,19 @@ input[type=date]:focus {
   content: "";
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    -55deg,
-    transparent 0px,
-    transparent 18px,
-    rgba(255,255,255,0.018) 18px,
-    rgba(255,255,255,0.018) 20px
-  );
+  background: repeating-linear-gradient(-55deg,
+      transparent 0px,
+      transparent 18px,
+      rgba(255, 255, 255, 0.018) 18px,
+      rgba(255, 255, 255, 0.018) 20px);
   pointer-events: none;
   z-index: 0;
 }
 
-.card > * { position: relative; z-index: 1; }
+.card>* {
+  position: relative;
+  z-index: 1;
+}
 
 .card-top {
   padding: 18px 20px 0;
@@ -580,7 +586,7 @@ input[type=date]:focus {
 .role-badge.PLAYER {
   background: rgba(246, 243, 234, 0.12);
   color: var(--chalk);
-  border: 1px solid rgba(246,243,234,0.25);
+  border: 1px solid rgba(246, 243, 234, 0.25);
 }
 
 .card-mid {
@@ -673,8 +679,13 @@ input[type=date]:focus {
   background: var(--pitch);
 }
 
-.perforation::before { left: -9px; }
-.perforation::after  { right: -9px; }
+.perforation::before {
+  left: -9px;
+}
+
+.perforation::after {
+  right: -9px;
+}
 
 .card-stub {
   padding: 12px 20px 16px;
@@ -809,8 +820,14 @@ input[type=date]:focus {
   scrollbar-color: #c8c0a8 transparent;
 }
 
-.history-list::-webkit-scrollbar { width: 6px; }
-.history-list::-webkit-scrollbar-thumb { background: #c8c0a8; border-radius: 3px; }
+.history-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+  background: #c8c0a8;
+  border-radius: 3px;
+}
 
 .history-item {
   display: flex;
@@ -882,4 +899,13 @@ input[type=date]:focus {
 .hist-download:hover {
   opacity: 1;
   background: rgba(14, 28, 22, 0.07);
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #fff;
+  font-size: 14px;
+  border-top: 1px solid #eee;
+  margin-top: 40px;
 }
