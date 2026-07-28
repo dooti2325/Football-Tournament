@@ -66,8 +66,10 @@ const $ = id => document.getElementById(id);
 
       const photoEl = $('cardPhoto');
       if (photoData) {
-        photoEl.innerHTML = `<img src="${photoData}">`;
+        photoEl.innerHTML = '';
+        photoEl.style.backgroundImage = `url(${photoData})`;
       } else {
+        photoEl.style.backgroundImage = 'none';
         photoEl.innerHTML = initials(name);
       }
 
@@ -168,8 +170,15 @@ const $ = id => document.getElementById(id);
               <div class="hist-name">${r.name}</div>
               <div class="hist-meta">${r.serial} · ${posStr || 'N/A'} · ${r.role}</div>
             </div>
+            <button class="hist-download" title="Download Card" style="background:none;border:none;cursor:pointer;opacity:0.7;padding:5px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </button>
           `;
             list.appendChild(el);
+            
+            el.querySelector('.hist-download').addEventListener('click', () => {
+              downloadAdminCard(r);
+            });
           });
           return; // Success, skip localStorage fallback
         }
@@ -199,8 +208,15 @@ const $ = id => document.getElementById(id);
           <div class="hist-name">${r.name}</div>
           <div class="hist-meta">${r.serial} · ${posDisp} · ${r.role}</div>
         </div>
+        <button class="hist-download" title="Download Card" style="background:none;border:none;cursor:pointer;opacity:0.7;padding:5px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        </button>
       `;
         list.appendChild(el);
+        
+        el.querySelector('.hist-download').addEventListener('click', () => {
+          downloadAdminCard(r);
+        });
       });
     }
 
@@ -335,3 +351,60 @@ const $ = id => document.getElementById(id);
     });
 
     updateCardLive();
+
+    function downloadAdminCard(r) {
+      $('cardName').textContent = r.name || 'Your Name';
+      
+      let posStr = '';
+      if (Array.isArray(r.positions)) posStr = r.positions.join(', ');
+      else if (typeof r.positions === 'string') {
+        try { posStr = JSON.parse(r.positions).join(', '); } catch (e) { posStr = r.positions; }
+      }
+      else if (r.position) posStr = r.position;
+
+      $('cardPosition').textContent = posStr ? posStr.toUpperCase() : 'POSITION';
+      $('cardAge').textContent = '—';
+      $('cardDob').textContent = '—';
+
+      const photoEl = $('cardPhoto');
+      if (r.photo) {
+        photoEl.innerHTML = '';
+        photoEl.style.backgroundImage = `url(${r.photo})`;
+      } else {
+        photoEl.style.backgroundImage = 'none';
+        photoEl.innerHTML = initials(r.name);
+      }
+
+      $('cardRoleBadge').textContent = r.role || 'PLAYER';
+      $('cardRoleBadge').className = 'role-badge ' + (r.role || 'PLAYER');
+      $('cardSerial').textContent = 'SERIAL · ' + r.serial;
+
+      $('qrcode').innerHTML = '';
+      new QRCode($('qrcode'), {
+        text: "ID: " + r.serial + "\\nName: " + r.name + "\\nPos: " + posStr,
+        width: 36,
+        height: 36,
+        colorDark: "#0E1C16",
+        colorLight: "#F6F3EA",
+        correctLevel: QRCode.CorrectLevel.L
+      });
+
+      if ($('playerCard').vanillaTilt) $('playerCard').vanillaTilt.destroy();
+      $('playerCard').style.transform = 'none';
+
+      setTimeout(() => {
+        html2canvas($('playerCard'), { backgroundColor: null, scale: 3 }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = (r.name.replace(/\s+/g, '_') || 'player') + '_matchday_card.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+
+          VanillaTilt.init($('playerCard'), { max: 10, speed: 400, glare: true, "max-glare": 0.2 });
+          if (!registered) {
+            updateCardLive();
+            $('qrcode').innerHTML = '';
+            $('cardSerial').textContent = 'SERIAL · AC-XXXX';
+          }
+        });
+      }, 50);
+    }
