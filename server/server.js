@@ -55,7 +55,7 @@ app.get(['/stats', '/api/stats'], async (req, res) => {
     const { count, error } = await supabase
       .from('registrations')
       .select('*', { count: 'exact', head: true });
-      
+
     if (error) throw error;
 
     res.json({ totalRegistrations: count || 0 });
@@ -73,7 +73,7 @@ app.get(['/registrations', '/api/registrations'], async (req, res) => {
       .select('name, serial, positions, role, registered_at')
       .order('registered_at', { ascending: false })
       .limit(100); // Fetch up to 100 recent players to display
-      
+
     if (error) throw error;
 
     res.json(data);
@@ -107,7 +107,7 @@ app.post(['/register', '/api/register'], async (req, res) => {
     if (existing && existing.length > 0) {
       return res.status(409).json({
         error: 'duplicate',
-        message: `This phone number is already registered. Serial ID: ${existing[0].serial} (${existing[0].name})`
+        message: `This player is already registered. Serial ID: ${existing[0].serial} (${existing[0].name})`
       });
     }
 
