@@ -92,7 +92,7 @@ function updateCardLive() {
 
 /* ─── Input listeners ─── */
 $('fName').addEventListener('input', e => { e.target.classList.remove('input-error'); updateCardLive(); });
-$('fDob').addEventListener('input',  e => { e.target.classList.remove('input-error'); updateCardLive(); });
+$('fDob').addEventListener('input', e => { e.target.classList.remove('input-error'); updateCardLive(); });
 $('fPhone').addEventListener('input', e => { e.target.classList.remove('input-error'); });
 
 document.querySelectorAll('.pos-check').forEach(c => {
@@ -113,7 +113,7 @@ document.querySelectorAll('.role-opt').forEach(el => {
 
 /* ─── Photo upload with compression ─── */
 $('photoPick').addEventListener('click', () => $('photoInput').click());
-$('photoBtn').addEventListener('click',  () => $('photoInput').click());
+$('photoBtn').addEventListener('click', () => $('photoInput').click());
 
 $('photoInput').addEventListener('change', e => {
   const file = e.target.files[0];
@@ -125,7 +125,7 @@ $('photoInput').addEventListener('change', e => {
       const MAX = 400;
       let w = img.width, h = img.height;
       if (w > h) { if (w > MAX) { h = h * MAX / w; w = MAX; } }
-      else        { if (h > MAX) { w = w * MAX / h; h = MAX; } }
+      else { if (h > MAX) { w = w * MAX / h; h = MAX; } }
       const canvas = document.createElement('canvas');
       canvas.width = w; canvas.height = h;
       canvas.getContext('2d').drawImage(img, 0, 0, w, h);
@@ -173,7 +173,7 @@ async function loadHistory() {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (key.startsWith('reg_')) {
-      try { records.push(JSON.parse(localStorage.getItem(key))); } catch(e) {}
+      try { records.push(JSON.parse(localStorage.getItem(key))); } catch (e) { }
     }
   }
   records.sort((a, b) => new Date(b.registeredAt) - new Date(a.registeredAt));
@@ -183,7 +183,7 @@ async function loadHistory() {
 function parsePosStr(r) {
   if (Array.isArray(r.positions)) return r.positions.join(', ');
   if (typeof r.positions === 'string') {
-    try { return JSON.parse(r.positions).join(', '); } catch(e) { return r.positions; }
+    try { return JSON.parse(r.positions).join(', '); } catch (e) { return r.positions; }
   }
   if (r.position) return r.position;
   return 'N/A';
@@ -225,11 +225,11 @@ loadHistory();
 
 /* ─── Registration submit ─── */
 $('submitBtn').addEventListener('click', async () => {
-  const name      = $('fName').value.trim();
-  const dob       = $('fDob').value;
+  const name = $('fName').value.trim();
+  const dob = $('fDob').value;
   const positions = getSelectedPositions();
-  const phone     = $('fPhone').value.trim();
-  const errEl     = $('formError');
+  const phone = $('fPhone').value.trim();
+  const errEl = $('formError');
 
   // Reset errors
   [$('fName'), $('fDob'), $('fPhone')].forEach(i => i.classList.remove('input-error'));
@@ -238,14 +238,14 @@ $('submitBtn').addEventListener('click', async () => {
   document.querySelectorAll('.pos-label').forEach(l => l.style.color = '');
 
   let hasError = false;
-  if (!name)               { $('fName').classList.add('input-error'); hasError = true; }
-  if (!dob)                { $('fDob').classList.add('input-error');  hasError = true; }
+  if (!name) { $('fName').classList.add('input-error'); hasError = true; }
+  if (!dob) { $('fDob').classList.add('input-error'); hasError = true; }
   if (positions.length === 0) {
     document.querySelectorAll('.pos-label').forEach(l => l.style.color = 'var(--red)');
     hasError = true;
   }
-  if (!phone)              { $('fPhone').classList.add('input-error'); hasError = true; }
-  if (!photoData)          { $('photoPick').style.borderColor = 'var(--red)'; $('photoPick').style.borderStyle = 'solid'; hasError = true; }
+  if (!phone) { $('fPhone').classList.add('input-error'); hasError = true; }
+  if (!photoData) { $('photoPick').style.borderColor = 'var(--red)'; $('photoPick').style.borderStyle = 'solid'; hasError = true; }
 
   if (hasError) {
     errEl.textContent = 'Please fill all required fields (marked with *).';
@@ -311,7 +311,7 @@ $('submitBtn').addEventListener('click', async () => {
 /* ─── Reset button ─── */
 $('resetBtn').addEventListener('click', () => {
   $('fName').value = '';
-  $('fDob').value  = '';
+  $('fDob').value = '';
   $('fPhone').value = '';
   document.querySelectorAll('.pos-check').forEach(c => c.checked = false);
   photoData = null;
