@@ -353,8 +353,16 @@ function downloadAdminCard(r) {
   // Temporarily fill card with this player's data
   $('cardName').textContent = r.name || 'Unknown';
   $('cardPosition').textContent = pos ? pos.toUpperCase() : 'POSITION';
-  $('cardAge').textContent = '—';
-  $('cardDob').textContent = '—';
+
+  // Use dob from the database record if available
+  if (r.dob) {
+    $('cardAge').textContent = calcAge(r.dob) !== null ? String(calcAge(r.dob)) : '—';
+    $('cardDob').textContent = fmtDob(r.dob);
+  } else {
+    $('cardAge').textContent = '—';
+    $('cardDob').textContent = '—';
+  }
+
   $('cardRoleBadge').textContent = r.role || 'PLAYER';
   $('cardRoleBadge').className = 'role-badge ' + (r.role || 'PLAYER');
   $('cardSerial').textContent = 'SERIAL · ' + (r.serial || '—');
@@ -369,6 +377,7 @@ function downloadAdminCard(r) {
     }
   });
 }
+
 
 /* ─── Shared capture + download ─── */
 function captureAndDownload(playerName, callback) {
